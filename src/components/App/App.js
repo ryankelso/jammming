@@ -8,22 +8,26 @@ import Playlist from './../Playlist/Playlist.js';
 const track1 = {
   name: 'I and Love and You',
   artist: 'The Avett Brothers',
-  album: 'I and Love and You'
+  album: 'I and Love and You',
+  id: '0'
 };
 const track2 = {
   name: 'And It Spread',
   artist: 'The Avett Brothers',
-  album: 'I and Love and You'
+  album: 'I and Love and You',
+  id: '1'
 };
 const track3 = {
   name: 'Ten Thousand Words',
   artist: 'The Avett Brothers',
-  album: 'I and Love and You'
+  album: 'I and Love and You',
+  id: '2'
 };
 const track4 = {
   name: 'Kick Drum Heart',
   artist: 'The Avett Brothers',
-  album: 'I and Love and You'
+  album: 'I and Love and You',
+  id: '3'
 };
 
 const tracks = [
@@ -33,11 +37,52 @@ const tracks = [
   track4
 ];
 
+const playlistName = 'Rockin Avett Tunes';
+
+const playlistTrack1 = {
+  name: 'Kick Drum Heart',
+  artist: 'The Avett Brothers',
+  album: 'I and Love and You',
+  id: '3'
+};
+
+const playlistTrack2 = {
+  name: 'Paranoia in B-Flat Major',
+  artist: 'The Avett Brothers',
+  album: 'Emotionalism',
+  id: '4'
+};
+
+const playlistTrack3 = {
+  name: 'And It Spread',
+  artist: 'The Avett Brothers',
+  album: 'I and Love and You',
+  id: '1'
+};
+
+const playlistTracks = [
+  playlistTrack1,
+  playlistTrack2,
+  playlistTrack3
+];
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     // later, a new method will set searchResults state to a response from Spotify API
-    this.state = {searchResults: tracks/*[]*/};
+    this.state = {searchResults: tracks/*[]*/, playlistName: playlistName, playlistTracks: playlistTracks};
+    this.addTrack = this.addTrack.bind(this);
+  }
+
+  addTrack(track) {
+    // if the input track does not exist in the playlistTracks array, then add the track
+    // to playlistTracks and update the app's playlistTracks state
+    // the track id will come from the Spotify API
+    // array.some() checks whether at least one element passes the test
+    if (!this.state.playlistTracks.some(playlistTrack => track.id === playlistTrack.id)) {
+      playlistTracks.push(track);
+      this.setState({playlistTracks: playlistTracks});
+    }
   }
 
   render() {
@@ -47,8 +92,8 @@ class App extends React.Component {
         <div className="App">
           <SearchBar />
           <div className="App-playlist">
-            <SearchResults searchResults={this.state.searchResults} />
-            <Playlist />
+            <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} />
+            <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
           </div>
         </div>
       </div>
