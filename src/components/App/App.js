@@ -9,25 +9,29 @@ const track1 = {
   name: 'I and Love and You',
   artist: 'The Avett Brothers',
   album: 'I and Love and You',
-  id: '0'
+  id: '0',
+  uri: 'spotify:track:0'
 };
 const track2 = {
   name: 'And It Spread',
   artist: 'The Avett Brothers',
   album: 'I and Love and You',
-  id: '1'
+  id: '1',
+  uri: 'spotify:track:1'
 };
 const track3 = {
   name: 'Ten Thousand Words',
   artist: 'The Avett Brothers',
   album: 'I and Love and You',
-  id: '2'
+  id: '2',
+  uri: 'spotify:track:2'
 };
 const track4 = {
   name: 'Kick Drum Heart',
   artist: 'The Avett Brothers',
   album: 'I and Love and You',
-  id: '3'
+  id: '3',
+  uri: 'spotify:track:3'
 };
 
 const tracks = [
@@ -43,21 +47,24 @@ const playlistTrack1 = {
   name: 'Kick Drum Heart',
   artist: 'The Avett Brothers',
   album: 'I and Love and You',
-  id: '3'
+  id: '3',
+  uri: 'spotify:track:3'
 };
 
 const playlistTrack2 = {
   name: 'Paranoia in B-Flat Major',
   artist: 'The Avett Brothers',
   album: 'Emotionalism',
-  id: '4'
+  id: '4',
+  uri: 'spotify:track:4'
 };
 
 const playlistTrack3 = {
   name: 'And It Spread',
   artist: 'The Avett Brothers',
   album: 'I and Love and You',
-  id: '1'
+  id: '1',
+  uri: 'spotify:track:1'
 };
 
 // Changed from const to let so App.removeTrack() would work
@@ -74,6 +81,8 @@ class App extends React.Component {
     this.state = {searchResults: tracks/*[]*/, playlistName: playlistName, playlistTracks: playlistTracks};
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
+    this.updatePlaylistName = this.updatePlaylistName.bind(this);
+    this.savePlaylist = this.savePlaylist.bind(this);
   }
 
   addTrack(track) {
@@ -95,6 +104,17 @@ class App extends React.Component {
     this.setState({playlistTracks: playlistTracks});
   }
 
+  updatePlaylistName(name) {
+    this.setState({playlistName: name});
+  }
+
+  savePlaylist() {
+    // array.map() on playlistTracks, for each track return the track uri, save to an array called trackURI's
+    let trackURIs = playlistTracks.map(playlistTrack => playlistTrack.uri);
+    console.log(this.state.playlistName);
+    console.log(trackURIs);
+  }
+
   render() {
     return (
       <div>
@@ -103,7 +123,13 @@ class App extends React.Component {
           <SearchBar />
           <div className="App-playlist">
             <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} />
-            <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} onRemove={this.removeTrack} />
+            <Playlist
+              playlistName={this.state.playlistName}
+              playlistTracks={this.state.playlistTracks}
+              onRemove={this.removeTrack}
+              onNameChange={this.updatePlaylistName}
+              onSave={this.savePlaylist}
+            />
           </div>
         </div>
       </div>
