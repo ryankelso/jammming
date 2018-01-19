@@ -4,21 +4,24 @@ import './Track.css';
 class Track extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClickAdd = this.handleClickAdd.bind(this);
+    this.handleClickRemove = this.handleClickRemove.bind(this);
   }
-  // Step 27 - don't fully understand .renderAction() yet, not sure if this is complete or correct yet
-  // will get called in <a className="Track-action"></a> ???
-  // will get passed isRemoval as a prop from... ???
+
   renderAction(isRemoval) {
     if (isRemoval === true) {
-      return '-';
+      return <a className="Track-action" onClick={this.handleClickRemove} >-</a>;
     } else {
-      return '+';
+      return <a className="Track-action" onClick={this.handleClickAdd} >+</a>;
     }
   }
 
-  handleClick(event) {
+  handleClickAdd(event) {
     this.props.onAdd(this.props.track);
+  }
+
+  handleClickRemove(event) {
+    this.props.onRemove(this.props.track);
   }
 
   render() {
@@ -26,9 +29,9 @@ class Track extends React.Component {
       <div className="Track">
         <div className="Track-information">
           <h3>{this.props.track.name}</h3>
-          <p>{this.props.track.artist/*<!-- track artist will go here-->*/} | {this.props.track.album/*<!-- track album will go here -->*/}</p>
+          <p>{this.props.track.artist} | {this.props.track.album}</p>
         </div>
-        <a className="Track-action" onClick={this.handleClick} >{/*<!-- + or - will go here -->*/}{this.renderAction(this.props.isRemoval)}</a>
+        {this.renderAction(this.props.isRemoval)}
       </div>
     );
   }
