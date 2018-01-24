@@ -6,6 +6,7 @@ import Playlist from './../Playlist/Playlist.js';
 import Spotify from './../../util/Spotify.js';
 
 // Hard code a static list of tracks for building the basic structure of the app
+/*
 const track1 = {
   name: 'I and Love and You',
   artist: 'The Avett Brothers',
@@ -33,14 +34,9 @@ const track4 = {
   album: 'I and Love and You',
   id: '3',
   uri: 'spotify:track:3'
-};
+};*/
 
-const tracks = [
-  track1,
-  track2,
-  track3,
-  track4
-];
+//const tracks = [track1,track2,track3,track4];
 
 const playlistName = 'Rockin Avett Tunes';
 
@@ -79,12 +75,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     // Later, a new method will set searchResults state to a response from Spotify API
-    this.state = {searchResults: tracks/*[]*/, playlistName: playlistName, playlistTracks: playlistTracks};
+    this.state = {searchResults: [], playlistName: playlistName, playlistTracks: playlistTracks};
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
+
+    Spotify.getAccessToken();
   }
 
   addTrack(track) {
@@ -118,8 +116,11 @@ class App extends React.Component {
   }
 
   search(searchTerm) {
-    console.log(searchTerm);
-    Spotify.getAccessToken();
+    //console.log(searchTerm);
+    //Spotify.getAccessToken();
+    Spotify.search(searchTerm).then(tracks => {
+      this.setState({searchResults: tracks});
+    });
   }
 
   render() {
