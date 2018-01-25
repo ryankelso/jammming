@@ -38,7 +38,7 @@ const track4 = {
 
 //const tracks = [track1,track2,track3,track4];
 
-const playlistName = 'Rockin Avett Tunes';
+//const playlistName = 'Rockin Avett Tunes';
 
 const playlistTrack1 = {
   name: 'Kick Drum Heart',
@@ -75,7 +75,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     // Later, a new method will set searchResults state to a response from Spotify API
-    this.state = {searchResults: [], playlistName: playlistName, playlistTracks: playlistTracks};
+    this.state = {searchResults: [], playlistName: 'New Playlist', playlistTracks: playlistTracks};
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
@@ -110,9 +110,13 @@ class App extends React.Component {
 
   savePlaylist() {
     // array.map() on playlistTracks, for each track return the track uri, save to an array called trackURI's
+
     let trackURIs = playlistTracks.map(playlistTrack => playlistTrack.uri);
-    console.log(this.state.playlistName);
-    console.log(trackURIs);
+    //console.log(this.state.playlistName);
+    //console.log(trackURIs);
+
+    Spotify.savePlaylist(this.state.playlistName, trackURIs);
+    // .then(reset the state of playlistName to 'New Playlist' and searchResults to an empty array)
   }
 
   search(searchTerm) {
