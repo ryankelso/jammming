@@ -10,7 +10,7 @@ const Spotify = {
   },
   getAccessToken() {
     if (accessToken) {
-      console.log("Access token already set: " + accessToken);
+      // Access token is already set, return it
       return accessToken
     }
     else {
@@ -19,17 +19,16 @@ const Spotify = {
       expiresIn = this.getParameterByName('expires_in');
 
       if (accessToken) {
+        // Access token is now set from the url
         // Expire the token after set time, remove it from the browser url
-        console.log("Access token is now set from the response url: " + accessToken);
         window.setTimeout(() => accessToken = '', expiresIn * 1000);
         window.history.pushState('Access Token', null, '/');
         return accessToken;
       }
 
-      // Finally, if the access token variable is not set, and is not in the URL,
-      // then redirect the user to the spotify authorize URL to login and get a token
       else {
-        console.log("Needs to request an access token from Spotify.");
+        // Finally, if the access token variable is not set, and is not in the URL,
+        // then redirect the user to the spotify authorize URL to login and get a token
         window.location = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
       }
     }
@@ -62,41 +61,59 @@ const Spotify = {
   async savePlaylist(playlistName, trackUris) {
     let currentAccessToken = this.getAccessToken();
     let authorizationHeader = {Authorization: `Bearer ${currentAccessToken}`};
-    let contentTypeHeader = {'Content-Type': 'application/json'};
+    //let contentTypeHeader = {'Content-Type': 'application/json'};
     //let headers = {headers: {Authorization: `Bearer ${currentAccessToken}`}};
     let userId = '';
     let playlistId = '';
     if (playlistName && trackUris) {
-      console.log(playlistName + ", " + trackUris);
+      //console.log(playlistName + ", " + trackUris);
       try {
         let response = await fetch('https://api.spotify.com/v1/me', {headers: authorizationHeader});
         if (response.ok) {
           let jsonResponse = await response.json();
-          console.log(jsonResponse);
+          //console.log(jsonResponse);
           userId = jsonResponse.id;
           try {
 
-            console.log('user id? : ' + userId);
+            //console.log('user id? : ' + userId);
             let playlistIdResponse = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,
               {
                 method: 'POST',
-                body: {name: playlistName},
+                body: JSON.stringify({name: playlistName}),
                 headers: {Authorization: `Bearer ${currentAccessToken}`, 'Content-Type': 'application/json'}
             });
             if (playlistIdResponse.ok) {
               let jsonPlaylistIdResponse = await playlistIdResponse.json();
               playlistId = jsonPlaylistIdResponse.id;
-              console.log(playlistId);
-              // one more try/catch
+              //console.log(playlistId);
+              try {
+
+                // TEST EACH TRY/CATCH BY REMOVING ACCESS TOKEN FROM HEADER
+
+                  let playlistAddTracksResponse = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`,
+                    {
+                      method: 'POST',
+                      body: JSON.stringify({uris: trackUris}),
+                      headers: {Authorization: `Bearer ${currentAccessToken}`, 'Content-Type': 'application/json'}
+                  });
+                  if (playlistAddTracksResponse.ok) {
+                    return;
+                  }
+                throw new Error('Request to add tracks to playlist failed.');
+              } catch(error) {
+                console.log(error);
+              }
+
             }
-            return; // remove and return in the final try catch
+            
+            throw new Error('Request to save new playlist failed.');
           } catch (error) {
             console.log(error);
           }
             //console.log(jsonResponse);
         }
-        //throw new Error('Request to get user id failed.');
-        console.log('throw some dumb error?');
+        throw new Error('Request to get user id failed.');
+
       } catch (error) {
         console.log(error);
       }

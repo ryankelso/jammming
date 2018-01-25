@@ -15,7 +15,7 @@ class SearchBar extends React.Component {
   }
 
   handleTermChange(event) {
-    // set a search term variable to the event (search box) target's value
+    // set SearchBar's searchTerm state to the event (search box) target's value
     this.setState({searchTerm: event.target.value});
   }
 
@@ -23,9 +23,6 @@ class SearchBar extends React.Component {
     return (
       <div className="SearchBar">
         <input placeholder="Enter A Song, Album, or Artist" onChange={this.handleTermChange} />
-        {/* Added onClick to make submitting a search term work, it doesn't
-        seem to be addressed in the instructions? Steps 66-73. Is it addressed
-        in a later step??*/}
         <a onClick={this.handleClickSearch}>SEARCH</a>
       </div>
     );
