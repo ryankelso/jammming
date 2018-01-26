@@ -49,8 +49,19 @@ class App extends React.Component {
   savePlaylist() {
     let trackURIs = this.state.playlistTracks.map(playlistTrack => playlistTrack.uri);
 
-    Spotify.savePlaylist(this.state.playlistName, trackURIs);
-    // .then(reset the state of playlistName to 'New Playlist' and searchResults to an empty array)
+    Spotify.savePlaylist(this.state.playlistName, trackURIs)
+      .then(success => {
+        // TEST THE 'undefined' scenario... have the method return an undefined object
+        if (success === false || !success) {
+          console.log(success);
+          console.log('save playlist failed');
+        }
+        else {
+          console.log('save playlist success');
+          this.setState({searchResults: []});
+          this.updatePlaylistName('New Playlist');
+        }
+      });
   }
 
   search(searchTerm) {
