@@ -17,8 +17,11 @@ class App extends React.Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
+  }
 
-    // First log in to Spotify to use Jammming
+  componentDidMount() {
+    // Since there is no login button, get an access token or redirect to login
+    // with Spotify when App mounts
     Spotify.getAccessToken();
   }
 
@@ -51,9 +54,7 @@ class App extends React.Component {
 
     Spotify.savePlaylist(this.state.playlistName, trackURIs)
       .then(success => {
-        // TEST THE 'undefined' scenario... have the method return an undefined object
         if (success === false || !success) {
-          console.log(success);
           console.log('save playlist failed');
         }
         else {
