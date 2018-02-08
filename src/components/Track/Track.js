@@ -6,11 +6,14 @@ class Track extends React.Component {
     super(props);
     this.handleClickAdd = this.handleClickAdd.bind(this);
     this.handleClickRemove = this.handleClickRemove.bind(this);
+    this.handleClickPlay = this.handleClickPlay.bind(this);
   }
 
   renderAction(isRemoval) {
     if (isRemoval === true) {
       return <a className="Track-action" onClick={this.handleClickRemove} >-</a>;
+    } else if (this.props.track.previewUrl) {
+      return <div><a className="Track-action" onClick={this.handleClickPlay} >►</a><a className="Track-action" onClick={this.handleClickAdd} >+</a></div>;
     } else {
       return <a className="Track-action" onClick={this.handleClickAdd} >+</a>;
     }
@@ -22,6 +25,10 @@ class Track extends React.Component {
 
   handleClickRemove(event) {
     this.props.onRemove(this.props.track);
+  }
+
+  handleClickPlay(event) {
+    this.props.getPreviewUrl(this.props.track);
   }
 
   render() {

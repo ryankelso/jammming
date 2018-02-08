@@ -2,6 +2,7 @@ let accessToken = '';
 let expiresIn;
 const clientId = 'ac9e81ffc1724c7b82eeca5d92c3c994';
 const redirectUri = 'https://rkelso_jammming.surge.sh/';
+//const redirectUri = 'http://localhost:3000/';
 
 const Spotify = {
   getParameterByName(name) {
@@ -47,7 +48,8 @@ const Spotify = {
               name: track.name,
               artist: track.artists[0].name,
               album: track.album.name,
-              uri: track.uri
+              uri: track.uri,
+              previewUrl: track.preview_url
             }
           });
         }
